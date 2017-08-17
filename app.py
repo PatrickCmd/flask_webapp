@@ -7,7 +7,7 @@ import sqlite3
 app = Flask(__name__)
 
 app.secret_key = '@#$%&*?@$#cmd123telnet$#%@$@'
-app.database = 'sampl.db'
+app.database = 'sample.db'
 
 # login required decorator
 def login_required(f):
@@ -33,7 +33,7 @@ def index():
                  for row in cur.fetchall()]
         print(posts)
         g.db.close()
-    except:
+    except sqlite3.OperationalError:
         flash("There is no database to connect to", "warning")
     return render_template('index.html', posts=posts)
 
