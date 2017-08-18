@@ -1,13 +1,21 @@
 from flask import Flask, render_template, redirect, url_for, request, \
     session, flash, g
+from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
-import sqlite3
+import os
 
 # creating the application object
 app = Flask(__name__)
 
-app.secret_key = '@#$%&*?@$#cmd123telnet$#%@$@'
-app.database = 'sample.db'
+# config
+# app.config.from_object('config.DevelopmentConfig')
+app.config.from_object(os.environ['APP_SETTINGS'])
+
+# creating sqlalchemy object
+db = SQLAlchemy(app)
+
+from models import *
+
 
 # login required decorator
 def login_required(f):
@@ -24,17 +32,7 @@ def login_required(f):
 @app.route('/')
 @login_required
 def index():
-    posts = []
-    try:
-        g.db = connect_db()
-        cur = g.db.execute('SELECT * FROM posts')
-        # print(cur.fetchall())
-        posts = [dict(title = row[0], description = row[1]) \
-                 for row in cur.fetchall()]
-        print(posts)
-        g.db.close()
-    except sqlite3.OperationalError:
-        flash("There is no database to connect to", "warning")
+    posts = db.session.query(BlogPost).all()
     return render_template('index.html', posts=posts)
 
 @app.route('/welcome')
@@ -61,9 +59,7 @@ def logout():
     flash("You are logged out", "warning")
     return redirect(url_for('login'))
 
-def connect_db():
-    return sqlite3.connect(app.database)
 
 # start the server with run function
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
