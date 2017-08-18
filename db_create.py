@@ -8,6 +8,9 @@ db.create_all()
 db.session.add(BlogPost("FLASK", "MICRO PYTHON FRAMEWORK"))
 db.session.add(BlogPost("PYTHON", "HIGH LEVEL PROGRAMMING LANGUAGE"))
 db.session.add(BlogPost("DJANGO", "BATTERY PYTHON FRAMEWORK"))
+db.session.add(BlogPost("POSTGRESQL", "CREATED AN INSTANCE OF POSTGRESQL"))
+db.session.add(BlogPost("ANDELA", "FELLOWSHIP FOUNDATION"))
+db.session.add(BlogPost("PATRICK", "BEST PYTHON PROGRAMMER EVER"))
 
 # commit
 db.session.commit()
