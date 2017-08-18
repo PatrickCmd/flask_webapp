@@ -49,11 +49,11 @@ class FlaskTestCase(unittest.TestCase):
         response = tester.get('/', follow_redirects=True)
         self.assertTrue(b'Unauthorized to access to this page, Please login' in response.data)
 
-    # Welcome page requires login
-    def test_welcome_route_requires_login(self):
+    # Welcome page works correctly
+    def test_welcome_route(self):
         tester = app.test_client(self)
-        response = tester.get('/welcome', follow_redirects=True)
-        self.assertTrue(b'Unauthorized to access to this page, Please login' in response.data)
+        response = tester.get('/welcome', content_type='html/text')
+        self.assertTrue(b'Welcome to Flask!' in response.data)
 
 
 if __name__ == '__main__':

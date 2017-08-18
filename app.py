@@ -26,18 +26,20 @@ def login_required(f):
             return f(*args, **kwargs)
         else:
             flash("Unauthorized to access to this page, Please login", "danger")
-            return redirect(url_for('login'))
+            return redirect(url_for('welcome'))
     return wrap
 
 # use a route decorator to link function to a url
 @app.route('/')
 @login_required
 def index():
-    posts = db.session.query(BlogPost).all()
+    try:
+        posts = db.session.query(BlogPost).all()
+    except:
+        flash("No database connection", "warning")
     return render_template('index.html', posts=posts)
 
 @app.route('/welcome')
-@login_required
 def welcome():
     return render_template('welcome.html')
 
@@ -51,7 +53,7 @@ def login():
         else:
             session['logged_in'] = True
             flash("You are logged in", "success")
-            return redirect(url_for('welcome'))
+            return redirect(url_for('index'))
     return render_template('login.html', error=error)
 
 @app.route('/logout')
