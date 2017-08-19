@@ -1,0 +1,5 @@
+set APP_SETTINGS=config.DevelopmentConfig
+set DATABASE_URl=postgresql://postgres:arsenal2016@localhost/flask_webapp
+
+CAN BE SET IN POSTACTIVATE FILE----LINUX(Virtualenvwrapper)
+CAN BE SET IN ACTIVATE FILE----WINDOWS(Virtualenvwrapper)
