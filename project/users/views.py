@@ -1,8 +1,5 @@
 from flask import flash, redirect, render_template, request, \
     url_for, Blueprint, session  # pragma: no cover
-from app import app
-from flask_bcrypt import Bcrypt
-bcrypt = Bcrypt(app)
 from functools import wraps
 
 
@@ -25,7 +22,7 @@ def login_required(f):
             return f(*args, **kwargs)
         else:
             flash("Unauthorized to access to this page, Please login", "danger")
-            return redirect(url_for('welcome'))
+            return redirect(url_for('home.welcome'))
     return wrap
 
 @users_blueprint.route('/login', methods=['GET', 'POST'])
@@ -38,11 +35,11 @@ def login():
         else:
             session['logged_in'] = True
             flash("You are logged in", "success")
-            return redirect(url_for('index'))
+            return redirect(url_for('home.index'))
     return render_template('login.html', error=error)
 
 @users_blueprint.route('/logout')
 def logout():
     session.pop('logged_in', None)
     flash("You are logged out", "warning")
-    return redirect(url_for('welcome'))
+    return redirect(url_for('home.welcome'))

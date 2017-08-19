@@ -1,24 +1,19 @@
-from flask import Flask, render_template, redirect, url_for, request, \
-    session, flash
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
+from flask import flash, url_for, render_template, redirect, session, \
+    Blueprint
 from functools import wraps
-import os
 
-# creating the application object
-# config
-# app.config.from_object('config.DevelopmentConfig')
-app = Flask(__name__)
-app.config.from_object(os.environ['APP_SETTINGS'])
-# creating sqlalchemy object
-db = SQLAlchemy(app)
+from project import app, db
+from project.models import BlogPost
 
-from models import *
-from project.users.views import users_blueprint
 
-# register blue print
-app.register_blueprint(users_blueprint)
+################
+#### config ####
+################
 
+home_blueprint = Blueprint(
+    'home', __name__,
+    template_folder='templates'
+)   # pragma: no cover
 
 ###### Helper function #######
 # login required decorator
@@ -34,7 +29,7 @@ def login_required(f):
 
 
 # use a route decorator to link function to a url
-@app.route('/')
+@home_blueprint.route('/')
 @login_required
 def index():
     try:
@@ -43,11 +38,6 @@ def index():
         flash("No database connection", "warning")
     return render_template('index.html', posts=posts)
 
-@app.route('/welcome')
+@home_blueprint.route('/welcome')
 def welcome():
     return render_template('welcome.html')
-
-
-# start the server with run function
-if __name__ == '__main__':
-    app.run()
